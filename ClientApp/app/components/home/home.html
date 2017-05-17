@@ -1,0 +1,10 @@
+<template>
+    <require from="../../d3-components/bar-chart/bar-chart"></require>
+    <h1>Monthly Sales</h1>
+    <hr />
+    <br />
+    <bar-chart chart-data.bind="salesData" chart-width="800" chart-height="500"></bar-chart>
+    <br />
+    <br />
+    <button type="button" class="btn btn-success" click.delegate="generateSampleSalesData()">Generate New Sample Sales Data</button>
+</template>

@@ -12,15 +12,27 @@ export class Home {
   currentYear = new Date().getFullYear();
 
   constructor(private http: HttpClient) {
-    this.getSampleData();
+    this.fetchSalesData();
+  }
+  
+  generateRandomSalesData() {
+    this.fetchSalesData();
   }
 
+  fetchSalesData() {
+    //get data from SalesDataController
+    this.http.fetch("/api/SalesData/GenerateRandomSalesData")
+      .then(result => result.json() as Promise<ISalesData[]>)
+      .then(data => {
+        this.salesData = [];
+        for (let i = 0; i < data.length; i++) {
+          this.salesData.push([data[i].monthYear, data[i].monthSales]);
+        }
+        console.clear();
+        console.log("SalesData FROM SalesDataController: ", this.salesData);
+      });
 
-
-  generateSampleSalesData() {
-    this.getSampleData();
-
-
+    //or generate random data without call to SalesDataController
     //this.salesData = [];
     //const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     //for (let i = 1; i <= 12; i++) {
@@ -29,20 +41,8 @@ export class Home {
     //    Math.floor(Math.random() * 1000)
     //  ]);
     //}
-
-    //console.log("generate: ", this.salesData);
-
-  }
-
-  getSampleData() {
-    return this.http.fetch("/api/SalesData/GenerateRandomSalesData")
-      .then(result => result.json() as Promise<ISalesData[]>)
-      .then(data => {
-
-        for (let i = 0; i < data.length; i++) {
-          this.salesData.push([data[i].monthYear, data[i].monthSales]);
-        }
-      });
+    //console.clear();
+    //console.log("SalesData NOT FROM SalesDataController: ", this.salesData);
   }
 
 }

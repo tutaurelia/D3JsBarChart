@@ -8,9 +8,6 @@ namespace D3JsBarChartApp.Controllers
     [Route("api/[controller]")]
     public class SalesDataController : Controller
     {
-
-
-
         [HttpGet("[action]")]
         public IEnumerable<SalesData> GenerateRandomSalesData()
         {
@@ -31,6 +28,5 @@ namespace D3JsBarChartApp.Controllers
             public string MonthYear { get; set; }
             public double MonthSales { get; set; }
         }
-
     }
 }

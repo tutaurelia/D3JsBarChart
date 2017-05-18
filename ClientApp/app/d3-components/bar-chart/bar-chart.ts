@@ -5,11 +5,8 @@ export class BarChart {
   @bindable chartData: Array<any>;
   @bindable chartWidth: number;
   @bindable chartHeight: number;
-
   margin: any = { top: 20, bottom: 20, left: 40, right: 20 };
-
   chart: any;
-
   xScale: any;
   yScale: any;
   colors: any;
@@ -17,7 +14,6 @@ export class BarChart {
   yAxis: any;
   plotArea: any;
   svg: any;
-
   isAttached = false;
 
   attached() {
@@ -33,7 +29,6 @@ export class BarChart {
   }
 
   createChart() {
-    if (!this.chartData) return;
     this.svg = d3.select("#chart").append("svg").attr("width", this.chartWidth).attr("height", this.chartHeight);
 
     //chart plot area
@@ -46,14 +41,14 @@ export class BarChart {
 
     //create scales
     this.xScale = d3.scaleBand().padding(0.1).domain(xDomain).range([0, this.chartWidth - this.margin.left]);
-    this.yScale = d3.scaleLinear().domain(yDomain).range([this.chartHeight - 2, 0]);
+    this.yScale = d3.scaleLinear().domain(yDomain).range([this.chartHeight, 0]);
 
     //bar colors
     this.colors = d3.scaleLinear().domain([0, this.chartData.length]).range(<any[]>["orange", "green"]);
 
     //yaxis
     this.yAxis = this.svg.append("g").attr("class", "axis axis-y")
-      .attr("transform", `translate(${this.margin.left} , ${-this.margin.top})`).call(d3.axisLeft(this.yScale));
+      .attr("transform", `translate(${this.margin.left} , ${-this.margin.bottom})`).call(d3.axisLeft(this.yScale));
 
     //xaxis
     this.xAxis = this.svg.append("g").attr("class", "axis axis-x")
@@ -62,10 +57,6 @@ export class BarChart {
   }
 
   updateChart() {
-    console.log("updatechart", this.chartData);
-    
-    if (!this.chartData) return;
-
     //update scales & axis
     this.xScale.domain(this.chartData.map(d => d[0]));
     this.yScale.domain([0, d3.max(this.chartData, d => d[1])]);
@@ -87,7 +78,7 @@ export class BarChart {
 
     this.plotArea.selectAll(".bar").transition()
       .attr("x", d => this.xScale(d[0]))
-      .attr("y", d => this.yScale(d[1]) - (2 * this.margin.top)).attr("width", d => this.xScale.bandwidth())
+      .attr("y", d => this.yScale(d[1]) - (2 * this.margin.top)).attr("width", () => this.xScale.bandwidth())
       .attr("height", calcHeight).style("fill", (d, i) => this.colors(i));
 
     //add new bars
